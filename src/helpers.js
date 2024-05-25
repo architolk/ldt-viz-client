@@ -7,3 +7,7 @@ export function replace(query,params) {
   }
   return _query;
 }
+
+export function uri2label(uri) {
+  return uri.replace(/^.*[\/|#]([^\/]+)$/,"$1");
+}

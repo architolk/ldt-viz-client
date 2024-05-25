@@ -1,8 +1,17 @@
-import * as displayTriples from './displayTriples.js';
+import * as displayTriplesModule from './displayTriples.js';
 import * as endpointModule from "./endpoint.js";
-//import * as test from './test.js';
 
-//test.test();
-endpointModule.setEndpoint("https://dbpedia.org/sparql");
-const query = "construct {<@URI@> ?p ?o. ?o rdfs:label ?olabel} where {<@URI@> ?p ?o OPTIONAL {?o rdfs:label ?olabel}}";
-displayTriples.displayTriples(document.getElementById("graph"),query, {uri: "http://dbpedia.org/ontology/Place"});
+/*
+import * as testModule from './test.js';
+export function test() {
+  testModule.test()
+}
+*/
+
+export function setEndpoint(_endpoint) {
+  endpointModule.setEndpoint(_endpoint)
+}
+
+export async function displayTriples(canvas, query, params) {
+  displayTriplesModule.displayTriples(canvas, query, params)
+}

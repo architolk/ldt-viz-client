@@ -42,7 +42,7 @@ export async function displayTriples(canvas, query, params) {
             const olabel = pobject.property.label;
             if (typeof olabel != "undefined") {
               //This object also has a label, so we can safely draw an edge (as it will be drawn as a node)
-              graph.edges.push({tail: myResource.value, head: pobject.value, attributes:{label: predicate.value}});
+              graph.edges.push({tail: myResource.value, head: pobject.value, attributes:{label: helperModule.uri2label(predicate.value)}});
             }
           }
         });
