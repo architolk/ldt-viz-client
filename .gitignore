@@ -61,5 +61,5 @@ typings/
 .next
 
 # Webpack bundle
-dist/rdflib.js
-dist/rdflib.js.LICENSE.txt
+dist/rdfvizlib.js
+dist/rdfvizlib.js.LICENSE.txt

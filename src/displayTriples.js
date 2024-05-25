@@ -21,10 +21,6 @@ export async function displayTriples(canvas, query) {
     'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
     'type': 'rdf:type',
     'label': 'rdfs:label',
-    'foaf': 'http://xmlns.com/foaf/0.1/',
-    'knows': 'foaf:knows',
-    'name': 'foaf:name',
-    'ex': 'http://example.org/'
   };
   const myLoader = new RdfObjectLoader({ context });
 
@@ -36,13 +32,13 @@ export async function displayTriples(canvas, query) {
     const resourceURIs = Object.keys(myLoader.resources);
     resourceURIs.forEach((resourceURI) => {
       const myResource = myLoader.resources[resourceURI];
-      const label = myResource.property['rdfs:label'];
+      const label = myResource.property.label;
       if (typeof label != "undefined") {
         //This resource has a label, so is a subject in the triple stream, WITH a label
         graph.nodes.push({name: myResource.value, attributes:{label: label.value}});
         myResource.predicates.forEach((predicate) => {
           for (const pobject of myResource.properties[predicate]) {
-            const olabel = pobject.property['rdfs:label'];
+            const olabel = pobject.property.label;
             if (typeof olabel != "undefined") {
               //This object also has a label, so we can safely draw an edge (as it will be drawn as a node)
               graph.edges.push({tail: myResource.value, head: pobject.value, attributes:{label: predicate.value}});
