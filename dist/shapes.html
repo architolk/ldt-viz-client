@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Graph tests</title>
+    <script src="rdfvizlib.js"></script>
+    <script>rdfvizlib.setEndpoint('https://dbpedia.org/sparql')</script>
+  </head>
+  <body>
+    <p>Shapes tests</p>
+    <ul>
+      <li><a href="index.html">Main page</a></li>
+      <li><a href="basic.html">Basic test</a></li>
+      <li><a href="concepts.html">Concepts test</a></li>
+      <li><a href="shapes.html">Shapes test</a></li>
+      <li><a href="erd.html">ERD test</a></li>
+    </ul>
+    <div id="graph"/>
+    <script>
+      const query = "prefix sh: <http://www.w3.org/ns/shacl#> construct {\
+        <urn:name:fiets> a sh:NodeShape.\
+        <urn:name:fiets> rdfs:label 'Fiets'.\
+        <urn:name:fiets> sh:property [rdfs:label 'bel'].\
+        <urn:name:fiets> sh:property [rdfs:label 'stuur'].\
+        <urn:name:fiets> sh:property [rdfs:label 'trapper'].\
+        <urn:name:fiets> sh:property [rdfs:label 'wiel'; sh:node <urn:name:wiel>].\
+        <urn:name:wiel> a sh:NodeShape.\
+        <urn:name:wiel> rdfs:label 'Wiel'.\
+      } where {}";
+      rdfvizlib.displayTriples(document.getElementById("graph"),query, {notation: "shapes"});
+      //rdfvizlib.test();
+    </script>
+  </body>
+</html>

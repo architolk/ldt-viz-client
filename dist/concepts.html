@@ -7,7 +7,7 @@
     <script>rdfvizlib.setEndpoint('https://dbpedia.org/sparql')</script>
   </head>
   <body>
-    <p>Main page - graph tests</p>
+    <p>Concepts tests</p>
     <ul>
       <li><a href="index.html">Main page</a></li>
       <li><a href="basic.html">Basic test</a></li>
@@ -17,8 +17,15 @@
     </ul>
     <div id="graph"/>
     <script>
-      const query = "construct {<@URI@> ?p ?o. ?o rdfs:label ?olabel} where {<@URI@> ?p ?o OPTIONAL {?o rdfs:label ?olabel}}";
-      rdfvizlib.displayTriples(document.getElementById("graph"),query, {uri: "http://dbpedia.org/ontology/Place"});
+      const query = "construct {\
+        <urn:name:fiets> a skos:Concept.\
+        <urn:name:fiets> rdfs:label 'Fiets'.\
+        <urn:name:fiets> skos:broader <urn:name:voertuig>.\
+        <urn:name:fiets> rdfs:comment 'Een fiets is een voertuig met twee wielen'.\
+        <urn:name:voertuig> a skos:Concept.\
+        <urn:name:voertuig> rdfs:label 'Voertuig'.\
+      } where {}";
+      rdfvizlib.displayTriples(document.getElementById("graph"),query, {notation: "concepts"});
       //rdfvizlib.test();
     </script>
   </body>

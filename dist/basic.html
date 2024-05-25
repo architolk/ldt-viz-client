@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Graph tests</title>
+    <script src="rdfvizlib.js"></script>
+    <script>rdfvizlib.setEndpoint('https://dbpedia.org/sparql')</script>
+  </head>
+  <body>
+    <p>Basic test</p>
+    <ul>
+      <li><a href="index.html">Main page</a></li>
+      <li><a href="basic.html">Basic test</a></li>
+      <li><a href="concepts.html">Concepts test</a></li>
+      <li><a href="shapes.html">Shapes test</a></li>
+      <li><a href="erd.html">ERD test</a></li>
+    </ul>
+    <div id="graph"/>
+    <script>
+      const query = "\
+        CONSTRUCT {\
+          <@URI@> ?p ?o.\
+          <@URI@> rdfs:label ?label.\
+          ?o rdfs:label ?olabel\
+        }\
+        WHERE {\
+          {\
+            <@URI@> rdfs:label ?label.\
+            FILTER (lang(?label)='en')\
+          }\
+          UNION\
+          {\
+            {\
+              SELECT ?p (max(?op) as ?o)\
+              WHERE {\
+                <@URI@> ?p ?op.\
+                ?op rdfs:label ?oplabel\
+              }\
+              GROUP BY ?p\
+            }\
+            {\
+              ?o rdfs:label ?olabel\
+              FILTER (lang(?olabel)='en')\
+            }\
+          }\
+        }";
+      rdfvizlib.displayTriples(document.getElementById("graph"),query, {uri: "http://dbpedia.org/resource/Johan_Cruyff", layout: "fdp", notation: "links"});
+      //rdfvizlib.test();
+    </script>
+  </body>
+</html>

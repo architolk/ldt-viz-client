@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ERD tests</title>
+    <script src="rdfvizlib.js"></script>
+    <script>rdfvizlib.setEndpoint('https://dbpedia.org/sparql')</script>
+  </head>
+  <body>
+    <p>Shapes tests</p>
+    <ul>
+      <li><a href="index.html">Main page</a></li>
+      <li><a href="basic.html">Basic test</a></li>
+      <li><a href="concepts.html">Concepts test</a></li>
+      <li><a href="shapes.html">Shapes test</a></li>
+      <li><a href="erd.html">ERD test</a></li>
+    </ul>
+    <div id="graph"/>
+    <script>
+      const query = "construct {\
+        <urn:name:fiets> a <urn:name:entity>.\
+        <urn:name:fiets> rdfs:label 'Fiets'.\
+        <urn:name:fiets> <urn:name:attribute> [rdfs:label 'bel'].\
+        <urn:name:fiets> <urn:name:attribute> [rdfs:label 'stuur'].\
+        <urn:name:fiets> <urn:name:attribute> [rdfs:label 'trapper'].\
+        <urn:name:wiel> a <urn:name:entity>.\
+        <urn:name:wiel> rdfs:label 'Wiel'.\
+        <urn:name:fietswiel> a <urn:name:relationship>.\
+        <urn:name:fietswiel> rdfs:label 'heeft'.\
+        <urn:name:fietswiel> <urn:name:from> <urn:name:fiets>.\
+        <urn:name:fietswiel> <urn:name:to> <urn:name:wiel>.\
+      } where {}";
+      rdfvizlib.displayTriples(document.getElementById("graph"),query, {notation: "erd"});
+      //rdfvizlib.test();
+    </script>
+  </body>
+</html>
