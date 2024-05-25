@@ -48,6 +48,8 @@ export async function displayTriples(canvas, query) {
       }
     });
 
+    console.log(graph);
+
     instance().then(viz => {
       const svg = viz.renderSVGElement(graph);
       canvas.appendChild(svg);
