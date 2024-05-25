@@ -2,8 +2,9 @@ import { instance } from "@viz-js/viz";
 import {SparqlEndpointFetcher} from "fetch-sparql-endpoint";
 import {RdfObjectLoader} from "rdf-object";
 import * as endpointModule from "./endpoint.js";
+import * as helperModule from "./helpers.js";
 
-export async function displayTriples(canvas, query) {
+export async function displayTriples(canvas, query, params) {
 
   const graph = {
     graphAttributes: {
@@ -25,7 +26,7 @@ export async function displayTriples(canvas, query) {
   const myLoader = new RdfObjectLoader({ context });
 
   const myFetcher = new SparqlEndpointFetcher();
-  const tripleStream = await myFetcher.fetchTriples(endpointModule.getEndpoint(), query);
+  const tripleStream = await myFetcher.fetchTriples(endpointModule.getEndpoint(), helperModule.replace(query,params));
 
   await myLoader.import(tripleStream).then(() => {
 
