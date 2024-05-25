@@ -1,4 +1,6 @@
 import { instance } from "@viz-js/viz";
+import * as displayTriples from './displayTriples.js';
+import * as endpointModule from "./endpoint.js";
 
 instance().then(viz => {
   const graph1 = {
@@ -37,7 +39,8 @@ instance().then(viz => {
       rankdir: "LR"
     },
     edgeAttributes: {
-      dir: "both"
+      dir: "both",
+      minlen: 3.0
     },
     nodeAttributes: {
       shape: "none", margin: 0
@@ -67,7 +70,7 @@ instance().then(viz => {
       {head: "Article", tail: "Comment", attributes: {label: "test", headlabel: "head", taillabel: "tail", arrowhead: "crowodot", arrowtail: "none"}}
     ]
   }
-  const graph = {
+  const graph3 = {
     edgeAttributes: {
       dir: "both"
     },
@@ -79,8 +82,27 @@ instance().then(viz => {
       {name: "b", attributes: {label: {html: "oifjwl laiwje fl"}}}
     ]
   }
+  const graph = {
+    graphAttributes: {
+      rankdir: "LR",
+    },
+    edgeAttributes: {
+      dir: "both",
+      minlen: 3.0
+    },
+    nodes: [
+      {name: "Article"},
+      {name: "Comment"}
+    ],
+    edges: [
+      {head: "Article", tail: "Comment", attributes: {label: "test", headlabel: "head", taillabel: "tail", arrowhead: "crowodot", arrowtail: "none"}}
+    ]
+  }
 
-  const svg = viz.renderSVGElement(graph2);
+  //const svg = viz.renderSVGElement(graph2);
 
-  document.getElementById("graph").appendChild(svg);
+  //document.getElementById("graph").appendChild(svg);
+
+  endpointModule.setEndpoint("https://dbpedia.org/sparql");
+  displayTriples.displayTriples(document.getElementById("graph"),"construct {<http://dbpedia.org/ontology/Place> ?p ?o. ?o rdfs:label ?olabel} where {<http://dbpedia.org/ontology/Place> ?p ?o OPTIONAL {?o rdfs:label ?olabel}}");
 });

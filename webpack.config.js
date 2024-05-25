@@ -1,4 +1,5 @@
 const path = require('path');
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
 
 module.exports = {
   mode: 'development', // development | production
@@ -12,5 +13,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'var',
     library: 'rdfvizlib'
-  }
+  },
+  plugins: [
+    new NodePolyfillPlugin()
+  ]
 };
