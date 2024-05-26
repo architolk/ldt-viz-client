@@ -15,7 +15,7 @@
       <li><a href="shapes.html">Shapes test</a></li>
       <li><a href="erd.html">ERD test</a></li>
     </ul>
-    <div id="graph"/>
+    <div id="graph" style="border: 2px solid red; width:600px; height:400px"/>
     <script>
       const query = "construct {<@URI@> ?p ?o. ?o rdfs:label ?olabel} where {<@URI@> ?p ?o OPTIONAL {?o rdfs:label ?olabel}}";
       rdfvizlib.displayTriples(document.getElementById("graph"),query, {uri: "http://dbpedia.org/ontology/Place"});

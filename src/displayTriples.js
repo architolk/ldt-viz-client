@@ -45,9 +45,62 @@ export async function displayTriples(canvas, query, params) {
 
     instance().then(viz => {
       const svg = viz.renderSVGElement(graph);
+      const svgHeight = helperModule.pt2px(svg.getAttribute("height"));
+      const canvasHeight = helperModule.px2px(canvas.style.height);
+      const hScale = svgHeight/canvasHeight;
+      const svgWidth = helperModule.pt2px(svg.getAttribute("width"));
+      const canvasWidth = helperModule.px2px(canvas.style.width);
+      const wScale = svgWidth/canvasWidth;
+      const gScale = (hScale > wScale) ? hScale : wScale;
+      svg.setAttribute("height",canvas.style.height);
+      svg.setAttribute("width",canvas.style.width);
       canvas.appendChild(svg);
+
+      const g = svg.getElementsByTagName('g')[0];
+      g.setAttribute("data-scale",gScale);
+      g.setAttribute("data-shrink",gScale);
+      const bbox = g.getBBox();
+      g.setAttribute("data-tx",-bbox.x);
+      g.setAttribute("data-ty",-bbox.y);
+      scaleGroup(g);
+      svg.addEventListener('wheel', eventListenerWheel);
+      svg.addEventListener('mousedown',eventListenerStartDrag);
+      svg.addEventListener('mouseleave',eventListenerEndDrag);
+      svg.addEventListener('mouseup',eventListenerEndDrag);
     });
   });
+}
+
+function eventListenerWheel(e) {
+  e.preventDefault();
+  const g = this.getElementsByTagName('g')[0];
+  const scale = (1-e.deltaY/10)*g.getAttribute("data-scale");
+  g.setAttribute("data-scale",scale);
+  scaleGroup(g);
+}
+
+function eventListenerDrag(e) {
+  e.preventDefault();
+  const g = this.getElementsByTagName('g')[0];
+  const scale = g.getAttribute("data-shrink")/g.getAttribute("data-scale");
+  const tx = 0.7*e.movementX*scale+1*g.getAttribute("data-tx");
+  const ty = 0.7*e.movementY*scale+1*g.getAttribute("data-ty");
+  g.setAttribute("data-tx",tx);
+  g.setAttribute("data-ty",ty);
+  scaleGroup(g);
+}
+function eventListenerStartDrag() {
+  this.addEventListener('mousemove',eventListenerDrag);
+}
+function eventListenerEndDrag() {
+  this.removeEventListener('mousemove',eventListenerDrag);
+}
+
+function scaleGroup(g) {
+  const scale = g.getAttribute("data-scale");
+  const tx = g.getAttribute("data-tx");
+  const ty = g.getAttribute("data-ty");
+  g.setAttribute("transform","scale("+scale+") rotate(0) translate("+tx+" "+ty+")");
 }
 
 // Display function:
