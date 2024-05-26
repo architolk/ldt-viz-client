@@ -237,7 +237,7 @@ function displayERD(_resources, graph) {
     const label = myResource.property.label;
     if ((typeof type != "undefined") && (typeof label != "undefined")) {
       if (type.value=="urn:name:entity") {
-        let htmlLabel = "<table border='0' cellborder='1' cellspacing='0' cellpadding='4'><tr><td bgcolor='lightblue'>"+label+"</td></tr>";
+        let htmlLabel = "<table border='0' cellborder='1' cellspacing='0' cellpadding='4' width='60'><tr><td bgcolor='lightblue'>"+label+"</td></tr>";
         for (const [property,resources] of Object.entries(myResource.propertiesUri)) {
           if (property=="urn:name:attribute") {
             for (const resource of resources) {
@@ -288,7 +288,16 @@ function displayERD(_resources, graph) {
               default:
             }
           }
-          graph.edges.push({tail: src.value, head: dest.value, attributes:{label: label, arrowhead: arrowhead, arrowtail: arrowtail}})
+          const edge = {tail: src.value, head: dest.value, attributes:{label: label, arrowhead: arrowhead, arrowtail: arrowtail}};
+          const fromRole = myResource.property['urn:name:fromRole'];
+          if (typeof fromRole != "undefined") {
+            edge.attributes.taillabel = fromRole.value
+          }
+          const toRole = myResource.property['urn:name:toRole'];
+          if (typeof toRole != "undefined") {
+            edge.attributes.headlabel = toRole.value
+          }
+          graph.edges.push(edge)
         }
       }
     }
