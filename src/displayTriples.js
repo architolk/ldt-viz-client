@@ -13,6 +13,7 @@ export async function displayTriples(canvas, query, params) {
     nodeAttributes: {
       shape: "circle"
     },
+    edgeAttributes: {},
     nodes: [],
     edges: []
   }
@@ -227,6 +228,8 @@ function displayShapes(_resources, graph) {
 function displayERD(_resources, graph) {
   graph.nodeAttributes.shape = "none";
   graph.nodeAttributes.margin = 0;
+  graph.edgeAttributes.dir = "both";
+  graph.edgeAttributes.minlen = "3.0";
   const resourceURIs = Object.keys(_resources);
   resourceURIs.forEach((resourceURI) => {
     const myResource = _resources[resourceURI];
@@ -238,8 +241,19 @@ function displayERD(_resources, graph) {
         for (const [property,resources] of Object.entries(myResource.propertiesUri)) {
           if (property=="urn:name:attribute") {
             for (const resource of resources) {
-              const olabel = resource.property.label;
+              var olabel = resource.property.label;
               if (typeof olabel != "undefined") {
+                const otype = resource.property['urn:name:type'];
+                if (typeof otype != "undefined") {
+                  const otypelabel = otype.property.label;
+                  if (typeof otypelabel != "undefined") {
+                    olabel += ": " + otype.property.label;
+                  }
+                }
+                const ocard = resource.property['urn:name:card'];
+                if (typeof ocard != "undefined") {
+                  olabel += " ["+ocard.value+"]";
+                }
                 htmlLabel += "<tr><td align='left'>" + olabel + "</td></tr>";
               }
             }
@@ -252,7 +266,29 @@ function displayERD(_resources, graph) {
         const src = myResource.property['urn:name:from'];
         const dest = myResource.property['urn:name:to'];
         if ((typeof src != "undefined") && (typeof dest != "undefined")) {
-          graph.edges.push({tail: src.value, head: dest.value, attributes:{label: label}})
+          var arrowhead = 'none';
+          var arrowtail = 'none';
+          const fromCard = myResource.property['urn:name:fromCard'];
+          if (typeof fromCard != "undefined") {
+            switch (fromCard.value) {
+              case "0,1": arrowtail = 'noneodot'; break;
+              case "1,1": arrowtail = 'noneotee'; break;
+              case "0,n": arrowtail = 'crowodot'; break;
+              case "1,n": arrowtail = 'crowotee'; break;
+              default:
+            }
+          }
+          const toCard = myResource.property['urn:name:toCard'];
+          if (typeof toCard != "undefined") {
+            switch (toCard.value) {
+              case "0,1": arrowhead = 'noneodot'; break;
+              case "1,1": arrowhead = 'noneotee'; break;
+              case "0,n": arrowhead = 'crowodot'; break;
+              case "1,n": arrowhead = 'crowotee'; break;
+              default:
+            }
+          }
+          graph.edges.push({tail: src.value, head: dest.value, attributes:{label: label, arrowhead: arrowhead, arrowtail: arrowtail}})
         }
       }
     }

@@ -20,8 +20,8 @@
       const query = "construct {\
         <urn:name:fiets> a <urn:name:entity>.\
         <urn:name:fiets> rdfs:label 'Fiets'.\
-        <urn:name:fiets> <urn:name:attribute> [rdfs:label 'bel'].\
-        <urn:name:fiets> <urn:name:attribute> [rdfs:label 'stuur'].\
+        <urn:name:fiets> <urn:name:attribute> [rdfs:label 'bel'; <urn:name:type> <urn:name:string>].\
+        <urn:name:fiets> <urn:name:attribute> [rdfs:label 'stuur'; <urn:name:card> '1,1'].\
         <urn:name:fiets> <urn:name:attribute> [rdfs:label 'trapper'].\
         <urn:name:wiel> a <urn:name:entity>.\
         <urn:name:wiel> rdfs:label 'Wiel'.\
@@ -29,6 +29,10 @@
         <urn:name:fietswiel> rdfs:label 'heeft'.\
         <urn:name:fietswiel> <urn:name:from> <urn:name:fiets>.\
         <urn:name:fietswiel> <urn:name:to> <urn:name:wiel>.\
+        <urn:name:fietswiel> <urn:name:fromCard> '0,1'.\
+        <urn:name:fietswiel> <urn:name:toCard> '1,n'.\
+        <urn:name:string> a <urn:name:domain>.\
+        <urn:name:string> rdfs:label 'string'.\
       } where {}";
       rdfvizlib.displayTriples(document.getElementById("graph"),query, {notation: "erd"});
       //rdfvizlib.test();
