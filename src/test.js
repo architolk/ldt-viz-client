@@ -2,6 +2,22 @@ import { instance } from "@viz-js/viz";
 
 export function test() {
   instance().then(viz => {
+    const graph = {
+      graphAttributes: {
+        rankdir: "LR",
+      },
+      edgeAttributes: {
+        dir: "both",
+        minlen: 3.0
+      },
+      nodes: [
+        {name: "Article"},
+        {name: "Comment"}
+      ],
+      edges: [
+        {head: "Article", tail: "Comment", attributes: {label: "test", headlabel: "head", taillabel: "tail", arrowhead: "crowodot", arrowtail: "none"}}
+      ]
+    }
     const graph1 = {
       graphAttributes: {
         rankdir: "LR"
@@ -81,24 +97,24 @@ export function test() {
         {name: "b", attributes: {label: {html: "oifjwl laiwje fl"}}}
       ]
     }
-    const graph = {
+    const graph4 = {
       graphAttributes: {
-        rankdir: "LR",
-      },
-      edgeAttributes: {
-        dir: "both",
-        minlen: 3.0
+        rankdir: "BT"
       },
       nodes: [
-        {name: "Article"},
-        {name: "Comment"}
+        {name: "Vehicle", attributes: {label: "Vehicle"}},
+        {name: "isa", attributes: {label: "x", shape: "none", width: 0, height: 0, margin: 0, image: "gen.svg"}},
+        {name: "Bicycle", attributes: {label: "Bicycle"}},
+        {name: "Car", attributes: {label: "Car"}}
       ],
       edges: [
-        {head: "Article", tail: "Comment", attributes: {label: "test", headlabel: "head", taillabel: "tail", arrowhead: "crowodot", arrowtail: "none"}}
+        {head: "Vehicle", tail: "isa", attributes: {label: "is a"}},
+        {head: "isa", tail: "Bicycle", attributes: {dir: "none"}},
+        {head: "isa", tail: "Car", attributes: {dir: "none"}}
       ]
     }
 
-    const svg = viz.renderSVGElement(graph2);
+    const svg = viz.renderSVGElement(graph4,{images: [{ name: "gen.svg", width: "40", height: "20" }]});
 
     document.getElementById("graph").appendChild(svg);
 

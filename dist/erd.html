@@ -18,6 +18,12 @@
     <div id="graph" style="border: 2px solid red; width:600px; height:400px"/>
     <script>
       const query = "construct {\
+        <urn:name:voertuig> a <urn:name:entity>.\
+        <urn:name:voertuig> rdfs:label 'Voertuig'.\
+        <urn:name:isa> a <urn:name:generalization>.\
+        <urn:name:isa> <urn:name:subtype> <urn:name:fiets>.\
+        <urn:name:isa> <urn:name:supertype> <urn:name:voertuig>.\
+        <urn:name:isa> rdfs:label 'isa'.\
         <urn:name:fiets> a <urn:name:entity>.\
         <urn:name:fiets> rdfs:label 'Fiets'.\
         <urn:name:fiets> <urn:name:attribute> [rdfs:label 'bel'; <urn:name:type> <urn:name:string>].\

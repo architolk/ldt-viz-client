@@ -45,7 +45,7 @@ export async function displayTriples(canvas, query, params) {
     }
 
     instance().then(viz => {
-      const svg = viz.renderSVGElement(graph);
+      const svg = viz.renderSVGElement(graph,{images: [{ name: "gen.svg", width: "40", height: "20" }]});
       const svgHeight = helperModule.pt2px(svg.getAttribute("height"));
       const canvasHeight = helperModule.px2px(canvas.style.height);
       const hScale = svgHeight/canvasHeight;
@@ -227,9 +227,9 @@ function displayShapes(_resources, graph) {
 
 function displayERD(_resources, graph) {
   graph.nodeAttributes.shape = "none";
+  graph.graphAttributes.rankdir = "BT";
   graph.nodeAttributes.margin = 0;
   graph.edgeAttributes.dir = "both";
-  graph.edgeAttributes.minlen = "3.0";
   const resourceURIs = Object.keys(_resources);
   resourceURIs.forEach((resourceURI) => {
     const myResource = _resources[resourceURI];
@@ -288,7 +288,7 @@ function displayERD(_resources, graph) {
               default:
             }
           }
-          const edge = {tail: src.value, head: dest.value, attributes:{label: label, arrowhead: arrowhead, arrowtail: arrowtail}};
+          const edge = {tail: src.value, head: dest.value, attributes:{constraint: "false", minlen: "3.0", label: label, arrowhead: arrowhead, arrowtail: arrowtail}};
           const fromRole = myResource.property['urn:name:fromRole'];
           if (typeof fromRole != "undefined") {
             edge.attributes.taillabel = fromRole.value
@@ -299,6 +299,13 @@ function displayERD(_resources, graph) {
           }
           graph.edges.push(edge)
         }
+      }
+      if (type.value=="urn:name:generalization") {
+        const subtype = myResource.property['urn:name:subtype'];
+        const supertype = myResource.property['urn:name:supertype'];
+        graph.nodes.push({name: myResource.value, attributes: {shape: "none", width: 0, height: 0, margin: 0, image: "gen.svg"}});
+        graph.edges.push({tail: subtype.value, head:myResource.value, attributes: {dir: 'none', weight: 20}});
+        graph.edges.push({tail: myResource.value, head:supertype.value, attributes: {dir: 'LR'}});
       }
     }
   });
