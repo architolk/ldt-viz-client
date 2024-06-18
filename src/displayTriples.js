@@ -300,12 +300,12 @@ function displayERD(_resources, graph) {
           graph.edges.push(edge)
         }
       }
-      if (type.value=="urn:name:generalization") {
-        const subtype = myResource.property['urn:name:subtype'];
-        const supertype = myResource.property['urn:name:supertype'];
+      if (type.value=="urn:name:classification") {
+        const subclass = myResource.property['urn:name:subclass'];
+        const superclass = myResource.property['urn:name:superclass'];
         graph.nodes.push({name: myResource.value, attributes: {shape: "none", width: 0, height: 0, margin: 0, image: "gen.svg"}});
-        graph.edges.push({tail: subtype.value, head:myResource.value, attributes: {dir: 'none', weight: 20}});
-        graph.edges.push({tail: myResource.value, head:supertype.value, attributes: {dir: 'LR'}});
+        graph.edges.push({tail: subclass.value, head:myResource.value, attributes: {dir: 'none', weight: 20}});
+        graph.edges.push({tail: myResource.value, head:superclass.value, attributes: {dir: 'LR'}});
       }
     }
   });
