@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Graph tests</title>
+    <script src="rdfvizlib.js"></script>
+    <script>rdfvizlib.setEndpoint('https://dbpedia.org/sparql')</script>
+  </head>
+  <body>
+    <p>Concepts tests</p>
+    <ul>
+      <li><a href="index.html">Main page</a></li>
+      <li><a href="basic.html">Basic test</a></li>
+      <li><a href="concepts.html">Concepts test</a></li>
+      <li><a href="shapes.html">Shapes test</a></li>
+      <li><a href="erd.html">ERD test</a></li>
+    </ul>
+    <div id="graph" style="border: 2px solid red; width:100%; height:400px"/>
+    <script>
+      const query = "construct {\
+        <urn:name:fiets> a skos:Concept.\
+        <urn:name:fiets> rdfs:label 'Fiets'.\
+        <urn:name:fiets> skos:broader <urn:name:voertuig>.\
+        <urn:name:fiets> skos:related <urn:name:wiel>.\
+        <urn:name:fiets> rdfs:comment 'Een fiets is een voertuig met twee wielen, aangedreven door menskracht'.\
+        <urn:name:voertuig> a skos:Concept.\
+        <urn:name:voertuig> rdfs:label 'Voertuig'.\
+        <urn:name:wiel> a skos:Concept.\
+        <urn:name:wiel> rdfs:label 'Wiel'.\
+        <urn:name:fietser> a skos:Concept.\
+        <urn:name:fietser> rdfs:label 'Fietser'.\
+        <urn:name:fietser> skos:related <urn:name:fiets>.\
+        <urn:name:fietser> skos:definition 'Een fietser is iemand die op een fiets rijdt'.\
+      } where {}";
+      rdfvizlib.displayTriples(document.getElementById("graph"),query, {notation: "concepts", layout: "fdp"});
+      //rdfvizlib.test();
+    </script>
+  </body>
+</html>

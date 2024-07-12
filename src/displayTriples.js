@@ -8,7 +8,8 @@ export async function displayTriples(canvas, query, params) {
 
   const graph = {
     graphAttributes: {
-      rankdir: "LR"
+      rankdir: "LR",
+      sep: "+20"
     },
     nodeAttributes: {
       shape: "circle"
@@ -46,15 +47,18 @@ export async function displayTriples(canvas, query, params) {
 
     instance().then(viz => {
       const svg = viz.renderSVGElement(graph,{images: [{ name: "gen.svg", width: "40", height: "20" }]});
+      const rect = canvas.getBoundingClientRect();
       const svgHeight = helperModule.pt2px(svg.getAttribute("height"));
-      const canvasHeight = helperModule.px2px(canvas.style.height);
+      //const canvasHeight = helperModule.px2px(canvas.style.height);
+      const canvasHeight = rect.height;
       const hScale = svgHeight/canvasHeight;
       const svgWidth = helperModule.pt2px(svg.getAttribute("width"));
-      const canvasWidth = helperModule.px2px(canvas.style.width);
+      //const canvasWidth = helperModule.px2px(canvas.style.width);
+      const canvasWidth = rect.width;
       const wScale = svgWidth/canvasWidth;
       const gScale = (hScale > wScale) ? hScale : wScale;
-      svg.setAttribute("height",canvas.style.height);
-      svg.setAttribute("width",canvas.style.width);
+      svg.setAttribute("height",canvasHeight);
+      svg.setAttribute("width",canvasWidth);
       canvas.appendChild(svg);
 
       const g = svg.getElementsByTagName('g')[0];
@@ -179,9 +183,11 @@ function displayConcepts(_resources, graph) {
             if ((typeof otype != "undefined") && (typeof olabel != "undefined")) {
               switch (property) {
                 case "http://www.w3.org/2004/02/skos/core#broader":
-                  graph.edges.push({tail: myResource.value, head: resource.value, attributes:{label: "skos:broader"}});
+                  graph.edges.push({tail: myResource.value, head: resource.value, attributes:{arrowhead: "onormal"}});
                   break;
                 default:
+                  graph.edges.push({tail: myResource.value, head: resource.value});
+                  break;
               }
             }
           }
