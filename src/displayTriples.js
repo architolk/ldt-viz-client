@@ -42,11 +42,66 @@ export async function displayTriples(canvas, query, params) {
       case "concepts": displayConcepts(myLoader.resources,graph); break;
       case "shapes": displayShapes(myLoader.resources,graph); break;
       case "erd": displayERD(myLoader.resources,graph); break;
+      case "all": displayProperties(myLoader.resources,graph); break;
       default: displayProperties(myLoader.resources,graph);
     }
 
     instance().then(viz => {
       const svg = viz.renderSVGElement(graph,{images: [{ name: "gen.svg", width: "40", height: "20" }]});
+
+      if (params.notation == "all"){
+       // Post-process the SVG to replace text labels with hyperlinks
+       svg.querySelectorAll('.edge text').forEach(textElement => {
+        const labelText = textElement.textContent;
+        const svgNS = "http://www.w3.org/2000/svg";
+        const xlinkNS = "http://www.w3.org/1999/xlink";
+        
+        // Create a new SVG 'a' element
+        const svgLink = document.createElementNS(svgNS, "a");
+        
+        // Set the href to the actual URL
+        const href = labelText.startsWith('http') ? labelText : `https://www.w3.org/TR/rdf-schema/#ch_${encodeURIComponent(labelText)}`;
+        svgLink.setAttributeNS(xlinkNS, "xlink:href", href);
+        
+        // Set the link to open in a new tab
+        svgLink.setAttribute("target", "_blank");
+        
+        // Copy positioning attributes from the original text element
+        ['x', 'y', 'text-anchor', 'font-family', 'font-size'].forEach(attr => {
+          if (textElement.hasAttribute(attr)) {
+            svgLink.setAttribute(attr, textElement.getAttribute(attr));
+          }
+        });
+        
+        // Create a new text element inside the link
+        const newText = document.createElementNS(svgNS, "text");
+        newText.textContent = labelText;
+        
+        // Copy styles from the original text element
+        const computedStyle = window.getComputedStyle(textElement);
+        newText.style.fill = "blue"; // Make the text blue
+        newText.style.textDecoration = "underline"; // Underline the text
+        
+        // Ensure the new text has the same positioning as the original
+        ['x', 'y', 'text-anchor', 'font-family', 'font-size'].forEach(attr => {
+          if (textElement.hasAttribute(attr)) {
+            newText.setAttribute(attr, textElement.getAttribute(attr));
+          }
+        });
+        
+        // Append the new text to the link, and the link to the parent of the original text
+        svgLink.appendChild(newText);
+        textElement.parentNode.replaceChild(svgLink, textElement);
+        
+        // Add click event listener (optional)
+        svgLink.addEventListener('click', (e) => {
+          console.log("Clicked on edge label:", labelText);
+          // If you want to prevent the default navigation, uncomment the next line
+          // e.preventDefault();
+        });
+      });
+      }
+
       const rect = canvas.getBoundingClientRect();
       const svgHeight = helperModule.pt2px(svg.getAttribute("height"));
       //const canvasHeight = helperModule.px2px(canvas.style.height);
