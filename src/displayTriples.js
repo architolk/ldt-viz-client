@@ -49,59 +49,6 @@ export async function displayTriples(canvas, query, params) {
     instance().then(viz => {
       const svg = viz.renderSVGElement(graph,{images: [{ name: "gen.svg", width: "40", height: "20" }]});
 
-      if (params.notation == "all"){
-       // Post-process the SVG to replace text labels with hyperlinks
-       svg.querySelectorAll('.edge text').forEach(textElement => {
-        const labelText = textElement.textContent;
-        const svgNS = "http://www.w3.org/2000/svg";
-        const xlinkNS = "http://www.w3.org/1999/xlink";
-        
-        // Create a new SVG 'a' element
-        const svgLink = document.createElementNS(svgNS, "a");
-        
-        // Set the href to the actual URL
-        const href = labelText.startsWith('http') ? labelText : `https://www.w3.org/TR/rdf-schema/#ch_${encodeURIComponent(labelText)}`;
-        svgLink.setAttributeNS(xlinkNS, "xlink:href", href);
-        
-        // Set the link to open in a new tab
-        svgLink.setAttribute("target", "_blank");
-        
-        // Copy positioning attributes from the original text element
-        ['x', 'y', 'text-anchor', 'font-family', 'font-size'].forEach(attr => {
-          if (textElement.hasAttribute(attr)) {
-            svgLink.setAttribute(attr, textElement.getAttribute(attr));
-          }
-        });
-        
-        // Create a new text element inside the link
-        const newText = document.createElementNS(svgNS, "text");
-        newText.textContent = labelText;
-        
-        // Copy styles from the original text element
-        const computedStyle = window.getComputedStyle(textElement);
-        newText.style.fill = "blue"; // Make the text blue
-        newText.style.textDecoration = "underline"; // Underline the text
-        
-        // Ensure the new text has the same positioning as the original
-        ['x', 'y', 'text-anchor', 'font-family', 'font-size'].forEach(attr => {
-          if (textElement.hasAttribute(attr)) {
-            newText.setAttribute(attr, textElement.getAttribute(attr));
-          }
-        });
-        
-        // Append the new text to the link, and the link to the parent of the original text
-        svgLink.appendChild(newText);
-        textElement.parentNode.replaceChild(svgLink, textElement);
-        
-        // Add click event listener (optional)
-        svgLink.addEventListener('click', (e) => {
-          console.log("Clicked on edge label:", labelText);
-          // If you want to prevent the default navigation, uncomment the next line
-          // e.preventDefault();
-        });
-      });
-      }
-
       const rect = canvas.getBoundingClientRect();
       const svgHeight = helperModule.pt2px(svg.getAttribute("height"));
       //const canvasHeight = helperModule.px2px(canvas.style.height);
@@ -216,14 +163,28 @@ function displayProperties(_resources, graph) {
       graph.nodes.push({name: myResource.value, attributes:{shape: "ellipse"}});
       for (const [property,resources] of Object.entries(myResource.propertiesUri)) {
         for (const resource of resources) {
+          let edgeAttributes = {
+            label: property,
+            labelURL: property.startsWith('http') ? property : `https://www.w3.org/TR/rdf-schema/#ch_${encodeURIComponent(property)}`,
+            labelTarget: "_blank",
+            labeltooltip: `Click to open ${property}`,
+            labelfontcolor: "blue",
+            labelfontsize: 14,
+            labelfontstyle: "underline",
+            URL: property.startsWith('http') ? property : `https://www.w3.org/TR/rdf-schema/#ch_${encodeURIComponent(property)}`,
+            target: "_blank",
+            fontcolor: "blue",
+            fontname: "underline"
+          };
+          
           switch (resource.type) {
             case "NamedNode":
               graph.nodes.push({name: resource.value, attributes:{shape: "ellipse"}}); //This is overkill if object = subject, but this id corrected by viz itself
-              graph.edges.push({tail: myResource.value, head: resource.value, attributes:{label: property}});
+              graph.edges.push({tail: myResource.value, head: resource.value, attributes:edgeAttributes});
               break;
             case "Literal":
               graph.nodes.push({name: resource.value, attributes:{shape: "box"}});
-              graph.edges.push({tail: myResource.value, head: resource.value, attributes:{label: property}});
+              graph.edges.push({tail: myResource.value, head: resource.value, attributes:edgeAttributes});
             default:
           }
         }
