@@ -79,8 +79,25 @@ export async function displayTriples(canvas, query, params) {
 function eventListenerWheel(e) {
   e.preventDefault();
   const g = this.getElementsByTagName('g')[0];
-  const scale = (1-e.deltaY/10)*g.getAttribute("data-scale");
-  g.setAttribute("data-scale",scale);
+  
+  // Get the current scale
+  let currentScale = parseFloat(g.getAttribute("data-scale"));
+  
+  // Calculate a zoom factor (adjust this value to change zoom sensitivity)
+  const zoomFactor = 0.05;
+  
+  // Calculate the new scale
+  let newScale = e.deltaY > 0 ? 
+    currentScale * (1 - zoomFactor) : // Zoom out
+    currentScale * (1 + zoomFactor);  // Zoom in
+  
+  // Limit the scale to a reasonable range (e.g., between 0.1 and 10)
+  newScale = Math.max(0.1, Math.min(newScale, 10));
+  
+  // Set the new scale
+  g.setAttribute("data-scale", newScale);
+  
+  // Apply the new scale
   scaleGroup(g);
 }
 
