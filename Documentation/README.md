@@ -38,7 +38,6 @@ The main function of this file is displayTriples(). In the [flowchart diagram](f
 
 ```mermaid
 flowchart TD
-flowchart TD
     A[Start] --> |canvas, query, params| B[displayTriples()]
     B --> C[Initialize graph object]
     C --> D[Create RdfObjectLoader]
