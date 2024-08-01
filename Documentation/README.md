@@ -109,13 +109,14 @@ P --> Q[End]
 
 This function accepts three arguments:
 
-  
 
 -  `canvas`: The HTML canvas element on which the graph should be rendered.
 
 -  `query`: The SPARQL query to be executed.
 
--  `params`: An object with parameters that influence the visualization.
+-  `params`: An object with parameters `layout` and `notation` that influence the visualization.
+    - `layout` will be the layout added to `graph.graphAttributes.layout`
+    - `notation` is used as an enum to activate the correct displayStyle, more can be read in [displayStyle](#displaystyle)
 
   
 
