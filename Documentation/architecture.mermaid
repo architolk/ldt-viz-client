@@ -1,0 +1,17 @@
+graph TD
+    A[Input] --> |SPARQL Query & Parameters| B[RDFVizLib Core]
+    B --> C[Triple Loading]
+    B --> D[Display Style Selection]
+    B --> E[Graph Rendering]
+    
+    C --> |Uses| F[SparqlEndpointFetcher]
+    C --> |Uses| G[RdfObjectLoader]
+    
+    E --> |Uses| H[viz-js]
+    
+    I[endpoint.js] --> |Provides Endpoint URL| C
+    J[helpers.js] --> |Utility Functions| B
+    
+    E --> K[Output: Rendered Graph on HTML Canvas]
+
+    style B fill:#f9f,stroke:#333,stroke-width:4px
