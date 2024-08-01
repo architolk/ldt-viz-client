@@ -4,7 +4,7 @@ RDFVizLib is a library for visualizing a graph from triples. its' main module is
 ```mermaid
 %% Last updated: 2024-08-01
 graph TD
-    A[Input] --> |SPARQL Query & Parameters| B[displayTriples.js]
+    A[Input] --> |canvas:HTMLElement, query:SPARQL, parameters| B[displayTriples.js]
     B --> |Does| C[1.Triple Loading]
     B --> |Does| D[2.Display Style Selection]
     B --> |Does| E[3.Graph Rendering]
@@ -17,7 +17,7 @@ graph TD
     I[endpoint.js] --> |Provides Endpoint URL| C
     J[helpers.js] --> |Utility Functions| B
     
-    E --> |Rendered Graph| K[HTML Canvas]
+    E --> K[Output: Rendered Graph on HTML Canvas]
 
     style B fill:#4682b4,stroke:#333,stroke-width:4px
 ```
