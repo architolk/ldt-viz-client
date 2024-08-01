@@ -4,9 +4,9 @@ RDFVizLib is a library for visualizing a graph from triples.
 ```mermaid
 graph TD
     A[Input] --> |SPARQL Query & Parameters| B[RDFVizLib Core]
-    B --> |Does| C[Triple Loading]
-    B --> |Does| D[Display Style Selection]
-    B --> |Does| E[Graph Rendering]
+    B --> |Does| C[1.Triple Loading]
+    B --> |Does| D[2.Display Style Selection]
+    B --> |Does| E[3.Graph Rendering]
     
     C --> |Uses| F[SparqlEndpointFetcher]
     C --> |Uses| G[RdfObjectLoader]
