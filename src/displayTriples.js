@@ -72,6 +72,9 @@ export async function displayTriples(canvas, query, params) {
       svg.addEventListener('mousedown',eventListenerStartDrag);
       svg.addEventListener('mouseleave',eventListenerEndDrag);
       svg.addEventListener('mouseup',eventListenerEndDrag);
+      svg.addEventListener('touchstart', eventListenerStartTouch);
+      svg.addEventListener('touchmove', eventListenerTouchDrag);
+      svg.addEventListener('touchend', eventListenerEndTouch);
     });
   });
 }
@@ -102,14 +105,17 @@ function eventListenerWheel(e) {
 }
 
 function eventListenerDrag(e) {
+  console.log('a')
   e.preventDefault();
-  const g = this.getElementsByTagName('g')[0];
-  const scale = g.getAttribute("data-shrink")/g.getAttribute("data-scale");
-  const tx = 0.7*e.movementX*scale+1*g.getAttribute("data-tx");
-  const ty = 0.7*e.movementY*scale+1*g.getAttribute("data-ty");
-  g.setAttribute("data-tx",tx);
-  g.setAttribute("data-ty",ty);
-  scaleGroup(g);
+  if (e.buttons === 4 | e.ctrlKey | e.shiftKey){
+    const g = this.getElementsByTagName('g')[0];
+    const scale = g.getAttribute("data-shrink")/g.getAttribute("data-scale");
+    const tx = 0.7*e.movementX*scale+1*g.getAttribute("data-tx");
+    const ty = 0.7*e.movementY*scale+1*g.getAttribute("data-ty");
+    g.setAttribute("data-tx",tx);
+    g.setAttribute("data-ty",ty);
+    scaleGroup(g);
+  }
 }
 function eventListenerStartDrag() {
   this.addEventListener('mousemove',eventListenerDrag);
@@ -117,6 +123,73 @@ function eventListenerStartDrag() {
 function eventListenerEndDrag() {
   this.removeEventListener('mousemove',eventListenerDrag);
 }
+
+
+function eventListenerStartTouch(e) {
+  e.preventDefault();
+  if (e.touches.length === 1) {
+    // Single touch - prepare for drag
+    this.lastTouchX = e.touches[0].clientX;
+    this.lastTouchY = e.touches[0].clientY;
+  } else if (e.touches.length === 2) {
+    // Two touches - prepare for pinch-zoom
+    this.lastPinchDistance = getPinchDistance(e.touches);
+  }
+}
+
+function eventListenerTouchDrag(e) {
+  e.preventDefault();
+  if (e.touches.length === 1) {
+    // Single touch - simulate drag
+    const touchX = e.touches[0].clientX;
+    const touchY = e.touches[0].clientY;
+    const movementX = touchX - this.lastTouchX;
+    const movementY = touchY - this.lastTouchY;
+    
+    // Create a simulated mouse event
+    const simulatedEvent = {
+      preventDefault: () => {},
+      movementX: movementX,
+      movementY: movementY,
+      buttons: 4 // Simulate middle mouse button
+    };
+    
+    eventListenerDrag.call(this, simulatedEvent);
+    
+    this.lastTouchX = touchX;
+    this.lastTouchY = touchY;
+  } else if (e.touches.length === 2) {
+    // Two touches - simulate pinch-zoom
+    const currentPinchDistance = getPinchDistance(e.touches);
+    const pinchDelta = currentPinchDistance - this.lastPinchDistance;
+    
+    // Create a simulated wheel event
+    const simulatedEvent = {
+      preventDefault: () => {},
+      deltaY: -pinchDelta // Negative to zoom in when pinching out
+    };
+    
+    eventListenerWheel.call(this, simulatedEvent);
+    
+    this.lastPinchDistance = currentPinchDistance;
+  }
+}
+
+function eventListenerEndTouch(e) {
+  e.preventDefault();
+  // Reset touch tracking variables
+  this.lastTouchX = null;
+  this.lastTouchY = null;
+  this.lastPinchDistance = null;
+}
+
+function getPinchDistance(touches) {
+  return Math.hypot(
+    touches[0].clientX - touches[1].clientX,
+    touches[0].clientY - touches[1].clientY
+  );
+}
+
 
 function scaleGroup(g) {
   const scale = g.getAttribute("data-scale");
