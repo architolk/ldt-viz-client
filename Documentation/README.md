@@ -18,7 +18,7 @@ graph TD
     
     E --> K[Output: Rendered Graph on HTML Canvas]
 
-    style B fill:#9ff,stroke:#333,stroke-width:4px
+    style B fill:#5f9ea0,stroke:#333,stroke-width:4px
 ```
 The architecture can be found in [architecture.mermaid](architecture.mermaid)
 
