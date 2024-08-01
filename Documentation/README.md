@@ -126,7 +126,7 @@ The `displayTriples` function then performs three tasks:
 
 1. Loading triples by passing the query and endpoint to `SparqlEndpointFetcher` and then loading this `tripleStream` into an object model of `RdfObjectLoader` (`myLoader`).
 
-2. Determining which display style to follow depending on `params.notation`. This then calls one of the `display_` functions.
+2. Determining which display style to follow depending on `params.notation`. This then calls one of the `display..` functions.
 
 3. Rendering the graph in the HTML canvas using `await myLoader.import(tripleStream).then(() => {instance().then(viz => { ... }}`.
 
