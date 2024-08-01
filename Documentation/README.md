@@ -34,10 +34,12 @@ The code starts by importing various modules necessary for its functionality:
 
 
 ## DisplayTriples function
-The main function of this file is displayTriples().
+The main function of this file is displayTriples(). In the [flowchart diagram](flowchart.mermaid) you can see the sequence of actions and function-calls that happen inside of the displayTriples() function.
+
 ```mermaid
 flowchart TD
-    A[Start] --> B[Receive Inputs: canvas, query, params]
+flowchart TD
+    A[Start] --> |canvas, query, params| B[displayTriples()]
     B --> C[Initialize graph object]
     C --> D[Create RdfObjectLoader]
     D --> E[Fetch triples from SPARQL endpoint]
