@@ -1,8 +1,8 @@
 graph TD
     A[Input] --> |SPARQL Query & Parameters| B[RDFVizLib Core]
-    B --> C[Triple Loading]
-    B --> D[Display Style Selection]
-    B --> E[Graph Rendering]
+    B --> |Does| C[1.Triple Loading]
+    B --> |Does| D[2.Display Style Selection]
+    B --> |Does| E[3.Graph Rendering]
     
     C --> |Uses| F[SparqlEndpointFetcher]
     C --> |Uses| G[RdfObjectLoader]
@@ -14,4 +14,4 @@ graph TD
     
     E --> K[Output: Rendered Graph on HTML Canvas]
 
-    style B fill:#f9f,stroke:#333,stroke-width:4px
+    style B fill:#4682b4,stroke:#333,stroke-width:4px
