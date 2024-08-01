@@ -20,7 +20,7 @@ graph TD
 
     style B fill:#4682b4,stroke:#333,stroke-width:4px
 ```
-The architecture can be found in [architecture.mermaid](architecture.mermaid)
+This overview can be found in [the modules overview](modules_overview.mermaid)
 
 ## Import statements
 The code starts by importing various modules necessary for its functionality:
@@ -31,8 +31,29 @@ The code starts by importing various modules necessary for its functionality:
 - `endpointModule`: This module (`endpoint.js`) contains the `getEndpoint` function that returns the URL of the SPARQL endpoint.
 - `helperModule`: This module (`helpers.js`) contains helper functions used in the code, such as `_query.replaceAll("@"+param.toUpperCase()+"@",params[param])`, converting URI to label, and converting pt to pixels and vice versa.
 
+
+
 ## DisplayTriples function
 The main function of this file is displayTriples().
+```mermaid
+flowchart TD
+    A[Start] --> B[Receive Inputs: canvas, query, params]
+    B --> C[Initialize graph object]
+    C --> D[Create RdfObjectLoader]
+    D --> E[Fetch triples from SPARQL endpoint]
+    E --> F[Import triples into RdfObjectLoader]
+    F --> G{Select Display Style}
+    G --> |Default| H[displayProperties]
+    G --> |Links| I[displayLinks]
+    G --> |Concepts| J[displayConcepts]
+    G --> |Shapes| K[displayShapes]
+    G --> |ERD| L[displayERD]
+    H & I & J & K & L --> M[Create viz instance]
+    M --> N[Render SVG Element]
+    N --> O[Append SVG to canvas]
+    O --> P[Add event listeners for interactivity]
+    P --> Q[End]
+```
 
 ### Inputs
 This function accepts three arguments:
