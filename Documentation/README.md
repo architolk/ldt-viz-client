@@ -1,7 +1,7 @@
 # RDFVizLib
 RDFVizLib is a library for visualizing a graph from triples.
 
-```mermaid
+[```mermaid
 graph TD
     A[Input] --> |SPARQL Query & Parameters| B[RDFVizLib Core]
     B --> C[Triple Loading]
@@ -19,9 +19,8 @@ graph TD
     E --> K[Output: Rendered Graph on HTML Canvas]
 
     style B fill:#f9f,stroke:#333,stroke-width:4px
-```
+```](architecture.mermaid)
 
-![mermaid architecture](architecture.mermaid)
 
 ## Import statements
 The code starts by importing various modules necessary for its functionality:
