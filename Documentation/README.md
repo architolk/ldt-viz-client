@@ -1,9 +1,9 @@
 # RDFVizLib
-RDFVizLib is a library for visualizing a graph from triples.
+RDFVizLib is a library for visualizing a graph from triples. its' main module is the displayTriples.js, but it is also dependent on other modules, such as SparqlEndpointFetcher from fetch-sparql-endpoint and RdfObjectLoader from rdf-object and instance from @viz-js/viz.
 
 ```mermaid
 graph TD
-    A[Input] --> |SPARQL Query & Parameters| B[RDFVizLib Core]
+    A[Input] --> |SPARQL Query & Parameters| B[displayTriples.js]
     B --> |Does| C[1.Triple Loading]
     B --> |Does| D[2.Display Style Selection]
     B --> |Does| E[3.Graph Rendering]
