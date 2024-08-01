@@ -17,7 +17,7 @@ graph TD
     I[endpoint.js] --> |Provides Endpoint URL| C
     J[helpers.js] --> |Utility Functions| B
     
-    E --> K[Output: Rendered Graph on HTML Canvas]
+    E --> |Rendered Graph| K[HTML Canvas]
 
     style B fill:#4682b4,stroke:#333,stroke-width:4px
 ```
