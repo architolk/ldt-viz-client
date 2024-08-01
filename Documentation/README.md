@@ -77,18 +77,18 @@ Finally, the myResource.value and label.value are pushed to the graph.nodes list
 
 And lastly, it iterates over the myResource.propertiesUri. For each resource, nodes and edges are pushed to graph.nodes:list and graph.edges:list.
 
-default: displayProperties(myLoader.resources,graph);
+#### default: displayProperties(myLoader.resources,graph);
 This displays all resources.
 
-case "links": displayLinks(myLoader.resources,graph)
+#### case "links": displayLinks(myLoader.resources,graph)
 This function only displays resources where myResource.property.label != "undefined". Then it iterates over the myResource.propertiesUri and only draws edges to resources where resource.property.label != "undefined".
 
-case "concepts": displayConcepts(myLoader.resources,graph); break;
+#### case "concepts": displayConcepts(myLoader.resources,graph); break;
 This function iterates over resourceURIs and only processes resources that contain both a type and a label, (typeof type != "undefined") && (typeof label != "undefined"). And if the type.value=="http://www.w3.org/2004/02/skos/core#Concept".
 In processing the resource, the desc is loaded from myResource.property.comment. The desc is combined with the label to form an HTML table in const htmlLabel.
 Finally, it iterates over the myResource.propertiesUri, and depending on the corresponding property, an arrowhead:"onormal" is given as an attribute, or no arrowhead. In any case, the edge is then pushed to graph.edges:list.
 
-case "shapes": displayShapes(myLoader.resources,graph); break;
+#### case "shapes": displayShapes(myLoader.resources,graph); break;
 This function iterates over resourceURIs and only processes resources that contain both a type and a label, (typeof type != "undefined") && (typeof label != "undefined"). And if the type.value=="http://www.w3.org/ns/shacl#NodeShape".
 In processing the resource, an HTML table is created containing the myResource.property.label.
 Then it iterates over the myResource.propertiesUri, if the property=="http://www.w3.org/ns/shacl#property" the resource is processed.
@@ -97,23 +97,23 @@ If resource.property['sh:node']!= "undefined" the edge to this node is added to 
 Finally, the entire table is pushed to the graph via
 `graph.nodes.push({name: myResource.value, attributes:{label: {html: htmlLabel}}});`
 
-case "erd": displayERD(myLoader.resources,graph); break;
+#### case "erd": displayERD(myLoader.resources,graph); break;
 This function iterates over resourceURIs and only processes resources that contain both a type and a label, (typeof type != "undefined") && (typeof label != "undefined").
 
-If the myResource.property.type.value=="urn:name:entity".
+##### If the myResource.property.type.value=="urn:name:entity".
 In processing the resource, an HTML table is created containing the myResource.property.label.
 Then a row with 1 cell is created in the HTML table: (htmlLabel += "<tr><td align='left'>" + [resource.property['urn:name:card'].value] + "</td></tr>") for each resource that meets the following conditions:
 if property=="urn:name:attribute" and resource.property.label!="undefined" and resource.property['urn:name:type'].property.label!="undefined" and resource.property['urn:name:card']!="undefined"
 After iterating over all cells, this table is pushed as htmlLabel to graph.nodes:list
 
-If the myResource.property.type.value=="urn:name:relationship".
+##### If the myResource.property.type.value=="urn:name:relationship".
 In processing, a src and dest are determined based on myResource.property['urn:name:from'] and myResource.property['urn:name:to'].
 The arrowtail is determined based on myResource.property['urn:name:fromCard'] and the arrowhead based on myResource.property['urn:name:toCard'].
 Finally, an edge is defined with attributes;
 tail: src.value, head: dest.value, attributes:{constraint: "false", minlen: "3.0", label: label, arrowhead: arrowhead, arrowtail: arrowtail}
 This is pushed to graph.edges:list
 
-If the myResource.property.type.value=="urn:name:classification".
+##### If the myResource.property.type.value=="urn:name:classification".
 sub- and superclass are defined based on myResource.property['urn:name:subclass'] and myResource.property['urn:name:superclass']
 Then a node is pushed with the myResource.value to graph.nodes:list
 Also, two edges are pushed to graph.edges:list. An edge with the subclass as tail and myResource as head, and an edge with the myResource as tail and the superclass as head.
