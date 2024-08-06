@@ -42,11 +42,13 @@ export async function displayTriples(canvas, query, params) {
       case "concepts": displayConcepts(myLoader.resources,graph); break;
       case "shapes": displayShapes(myLoader.resources,graph); break;
       case "erd": displayERD(myLoader.resources,graph); break;
+      case "all": displayProperties(myLoader.resources,graph); break;
       default: displayProperties(myLoader.resources,graph);
     }
 
     instance().then(viz => {
       const svg = viz.renderSVGElement(graph,{images: [{ name: "gen.svg", width: "40", height: "20" }]});
+
       const rect = canvas.getBoundingClientRect();
       const svgHeight = helperModule.pt2px(svg.getAttribute("height"));
       //const canvasHeight = helperModule.px2px(canvas.style.height);
@@ -82,24 +84,24 @@ export async function displayTriples(canvas, query, params) {
 function eventListenerWheel(e) {
   e.preventDefault();
   const g = this.getElementsByTagName('g')[0];
-  
+
   // Get the current scale
   let currentScale = parseFloat(g.getAttribute("data-scale"));
-  
+
   // Calculate a zoom factor (adjust this value to change zoom sensitivity)
   const zoomFactor = 0.05;
-  
+
   // Calculate the new scale
-  let newScale = e.deltaY > 0 ? 
+  let newScale = e.deltaY > 0 ?
     currentScale * (1 - zoomFactor) : // Zoom out
     currentScale * (1 + zoomFactor);  // Zoom in
-  
+
   // Limit the scale to a reasonable range (e.g., between 0.1 and 10)
   newScale = Math.max(0.1, Math.min(newScale, 10));
-  
+
   // Set the new scale
   g.setAttribute("data-scale", newScale);
-  
+
   // Apply the new scale
   scaleGroup(g);
 }
@@ -145,7 +147,7 @@ function eventListenerTouchDrag(e) {
     const touchY = e.touches[0].clientY;
     const movementX = touchX - this.lastTouchX;
     const movementY = touchY - this.lastTouchY;
-    
+
     // Create a simulated mouse event
     const simulatedEvent = {
       preventDefault: () => {},
@@ -153,24 +155,24 @@ function eventListenerTouchDrag(e) {
       movementY: movementY,
       buttons: 4 // Simulate middle mouse button
     };
-    
+
     eventListenerDrag.call(this, simulatedEvent);
-    
+
     this.lastTouchX = touchX;
     this.lastTouchY = touchY;
   } else if (e.touches.length === 2) {
     // Two touches - simulate pinch-zoom
     const currentPinchDistance = getPinchDistance(e.touches);
     const pinchDelta = currentPinchDistance - this.lastPinchDistance;
-    
+
     // Create a simulated wheel event
     const simulatedEvent = {
       preventDefault: () => {},
       deltaY: -pinchDelta // Negative to zoom in when pinching out
     };
-    
+
     eventListenerWheel.call(this, simulatedEvent);
-    
+
     this.lastPinchDistance = currentPinchDistance;
   }
 }
@@ -234,14 +236,28 @@ function displayProperties(_resources, graph) {
       graph.nodes.push({name: myResource.value, attributes:{shape: "ellipse"}});
       for (const [property,resources] of Object.entries(myResource.propertiesUri)) {
         for (const resource of resources) {
+          let edgeAttributes = {
+            label: property.replace(/^.*[#|/]([^(#|/)]+)$/,"$1"),
+            labelURL: property,
+            labelTarget: "_blank",
+            labeltooltip: property,
+            labelfontcolor: "blue",
+            labelfontsize: 14,
+            labelfontstyle: "underline",
+            URL: property,
+            target: "_blank",
+            fontcolor: "blue",
+            fontname: "underline"
+          };
+
           switch (resource.type) {
             case "NamedNode":
               graph.nodes.push({name: resource.value, attributes:{shape: "ellipse"}}); //This is overkill if object = subject, but this id corrected by viz itself
-              graph.edges.push({tail: myResource.value, head: resource.value, attributes:{label: property}});
+              graph.edges.push({tail: myResource.value, head: resource.value, attributes:edgeAttributes});
               break;
             case "Literal":
               graph.nodes.push({name: resource.value, attributes:{shape: "box"}});
-              graph.edges.push({tail: myResource.value, head: resource.value, attributes:{label: property}});
+              graph.edges.push({tail: myResource.value, head: resource.value, attributes:edgeAttributes});
             default:
           }
         }
