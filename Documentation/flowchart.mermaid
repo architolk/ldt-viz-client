@@ -1,0 +1,17 @@
+flowchart TD
+    A[Start] --> |canvas, query, params| B[displayTriples]
+    B --> C[Initialize graph object]
+    C --> D[Create RdfObjectLoader]
+    D --> E[Fetch triples from SPARQL endpoint]
+    E --> F[Import triples into RdfObjectLoader]
+    F --> G{Select Display Style}
+    G --> |Default| H[displayProperties]
+    G --> |"links"| I[displayLinks]
+    G --> |"concepts"| J[displayConcepts]
+    G --> |"shapes"| K[displayShapes]
+    G --> |"erd"| L[displayERD]
+    H & I & J & K & L --> M[Create viz instance]
+    M --> N[Render SVG Element]
+    N --> O[Append SVG to canvas]
+    O --> P[Add event listeners for interactivity]
+    P --> Q[End]
