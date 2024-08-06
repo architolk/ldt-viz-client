@@ -42,11 +42,13 @@ export async function displayTriples(canvas, query, params) {
       case "concepts": displayConcepts(myLoader.resources,graph); break;
       case "shapes": displayShapes(myLoader.resources,graph); break;
       case "erd": displayERD(myLoader.resources,graph); break;
+      case "all": displayProperties(myLoader.resources,graph); break;
       default: displayProperties(myLoader.resources,graph);
     }
 
     instance().then(viz => {
       const svg = viz.renderSVGElement(graph,{images: [{ name: "gen.svg", width: "40", height: "20" }]});
+
       const rect = canvas.getBoundingClientRect();
       const svgHeight = helperModule.pt2px(svg.getAttribute("height"));
       //const canvasHeight = helperModule.px2px(canvas.style.height);
@@ -234,14 +236,28 @@ function displayProperties(_resources, graph) {
       graph.nodes.push({name: myResource.value, attributes:{shape: "ellipse"}});
       for (const [property,resources] of Object.entries(myResource.propertiesUri)) {
         for (const resource of resources) {
+          let edgeAttributes = {
+            label: property,
+            labelURL: property.startsWith('http') ? property : `https://www.w3.org/TR/rdf-schema/#ch_${encodeURIComponent(property)}`,
+            labelTarget: "_blank",
+            labeltooltip: `Click to open ${property}`,
+            labelfontcolor: "blue",
+            labelfontsize: 14,
+            labelfontstyle: "underline",
+            URL: property.startsWith('http') ? property : `https://www.w3.org/TR/rdf-schema/#ch_${encodeURIComponent(property)}`,
+            target: "_blank",
+            fontcolor: "blue",
+            fontname: "underline"
+          };
+          
           switch (resource.type) {
             case "NamedNode":
               graph.nodes.push({name: resource.value, attributes:{shape: "ellipse"}}); //This is overkill if object = subject, but this id corrected by viz itself
-              graph.edges.push({tail: myResource.value, head: resource.value, attributes:{label: property}});
+              graph.edges.push({tail: myResource.value, head: resource.value, attributes:edgeAttributes});
               break;
             case "Literal":
               graph.nodes.push({name: resource.value, attributes:{shape: "box"}});
-              graph.edges.push({tail: myResource.value, head: resource.value, attributes:{label: property}});
+              graph.edges.push({tail: myResource.value, head: resource.value, attributes:edgeAttributes});
             default:
           }
         }
