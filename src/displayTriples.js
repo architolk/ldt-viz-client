@@ -107,9 +107,8 @@ function eventListenerWheel(e) {
 }
 
 function eventListenerDrag(e) {
-  console.log('a')
   e.preventDefault();
-  if (e.buttons === 4 | e.ctrlKey | e.shiftKey){
+  if (e.buttons === 1){
     const g = this.getElementsByTagName('g')[0];
     const scale = g.getAttribute("data-shrink")/g.getAttribute("data-scale");
     const tx = 0.7*e.movementX*scale+1*g.getAttribute("data-tx");
